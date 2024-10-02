@@ -186,3 +186,30 @@ footer nav ul {
 	margin: 2em
 }
 
+
+/**** Bouton Filtres ****/
+#filtres{
+	display: flex;
+	justify-content: center;	
+	gap : 10px;
+	margin-bottom: 50px;
+	margin-top: 40px;
+} 
+.bouton0, .bouton1, .bouton2, .bouton3{
+	height: 37px;
+	background-color: transparent;
+	border-radius:60px;
+	width: auto;
+	border:1px;
+	border-style: solid;
+	border-color :#1D6154;
+	padding: 0 20px;
+	color :#1D6154;
+	font-size: 16px;
+	font-weight: bold;
+	font-family: 'Syne';
+}
+.filtres, button:hover{
+	background-color: #1D6154;
+	color:white;
+}
