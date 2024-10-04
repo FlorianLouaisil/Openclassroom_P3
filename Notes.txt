@@ -1,0 +1,35 @@
+Étape 1 : 
+Ajout des boutons de filtre générés dynamiquement par le JS
+
+    Image provenant bien de l'API
+    Mettre les bonnes couleurs de fond (main/footer)
+
+Étape 2 : 
+    HTML + CSS + JS
+    Manque un message pour indiquer que l'identifiant ou le mot de passe est incorrect (à faire rapidement)
+
+Étape 3 :
+
+    Toute l'intégration est faite :
+    Reste à pouvoir supprimer une image, ajouter une image + titre et un bouton retour.
+
+    Modifier : défaut au survole des bouton poubelle et sur la croix de fermeture
+
+Étape 4 :
+    Reste à tout vérifier.
+
+
+Questions :
+
+Hésitation entre générer la modale en l'intégrant dans le HTML ou faire comme j'ai fait avec le JS.
+
+Est-ce la bonne méthode pour vérifier les logs ? La réponse peut-elle être différente avec d'autres navigateurs ?
+
+Est-ce la bonne méthode de faire plusieurs fichiers HTML ou de tout mettre dans un seul ?
+
+
+Log :
+
+sophie.bluel@test.tld
+
+S0phie

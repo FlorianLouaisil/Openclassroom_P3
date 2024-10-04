@@ -1,6 +1,8 @@
 // Vérification login
+
 // "sophie.bluel@test.tld"
 // "S0phie"
+
 // Variable
 let username
 let password
@@ -27,12 +29,12 @@ function request(){
         // Correct
         else{
             console.log("Correct");
-            window.location.href = "index.html"
+            //Envoie vers l'utilisateur
+            window.location.href = "Admin.html"
         }
     })
     
 }
-
 
 // Bouton "se connecter"
 document.getElementById("Submit").onclick = function(){

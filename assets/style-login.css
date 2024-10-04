@@ -99,18 +99,11 @@ li:hover {
 	color: #B1663C;
 }
 
-
-
-
-
-
-/* Block Modifier // a refaire pour la page principale */
 footer nav ul {
 	display: flex;
 	justify-content: flex-end;
 	/* margin: 2em */
 }
-
 
 
 
@@ -126,34 +119,22 @@ body{
 	background-color: #FFFEF8;
 	display: flex;
 	flex-direction:column ;
-	
 }
-
 .formulaire{
     display: flex;
     flex-direction: column;
-    
-  
-   
-    
-
-    
-    /* margin: auto; */
 }
 
 .formulaire h2{
     text-align: center;
     font-size: 30px;
     font-weight: bold;
-
     margin-top: 158px;
     margin-bottom: 37px;
 }
 .formulaire label{
-   
     font-size: 14px;
     margin-bottom: 7px;
-    
 }
 .formulaire input{
     width: 379px;
@@ -164,7 +145,6 @@ body{
 }
 
 .formulaire button{
-    
     height: 36px;
     width: 179px;   
     border-radius: 60px;
@@ -187,9 +167,7 @@ body{
 }
 .content{
     display: flex;
-    
 	max-width: 1140px;
-    /* Pour centre */
     margin: auto;
 	justify-content: center;
 	width: 100%;
@@ -201,7 +179,6 @@ footer{
 	align-items: center;
 	height: 60px;
 	background-color: white;
-
 } 
 
 .nav-footer{
@@ -209,3 +186,9 @@ footer{
 	margin:auto; 
 	width: 100%;  
 } 
+
+/* login */
+
+.log{
+	font-weight: bold;
+}
