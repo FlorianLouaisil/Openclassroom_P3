@@ -1,279 +1,313 @@
-///Récupération de la collection de l'API///
-const reponse = await fetch('http://localhost:5678/api/works');
-const collection = await reponse.json();
+fetch('http://localhost:5678/api/works')
+  .then((response) => response.json())
+  .then((data) => {
+    collection = data
 
-/// Variable///
-let modal = null //fenêtre modale
+    if (sessionStorage.getItem("token") !== null) {
+      console.log("connecté")
+      RecupererCatégorie();
+      document.querySelector(".lien").addEventListener("click", openModal);
+      genererCollection(collection);
+     }
 
-///Fonctions///
+     else{
+       console.log("pas connecté")
+       //Suppression lien vers modale
+       document.getElementById("masquer").style.display = "none"; 
+       genererCollection(collection);
+       BoutonFiltres()
+     }
+})
 
-//Affiche les images de la collection provenant de l'API
+
+
 function genererCollection(collection){
-    for (let i = 0; i < collection.length; i++) {
-        const article = collection[i]
-        const gallery = document.querySelector(".gallery")
-        
-        // Création des balises figure
-        const figure = document.createElement("figure")
+  for (let i = 0; i < collection.length; i++) {
+      const article = collection[i]
+      const gallery = document.querySelector(".gallery")
+      
+      // Création des balises figure
+      const figure = document.createElement("figure")
 
-        // Création des balises IMG
-        const imageCollection = document.createElement("img");
-        imageCollection.src = article.imageUrl
+      // Création des balises IMG
+      const imageCollection = document.createElement("img");
+      imageCollection.src = article.imageUrl
 
-        // Création des balises figcaption pour afficher de le titre des images
-        const titleImage = document.createElement("figcaption")
-        titleImage .innerText = article.title
+      // Création des balises figcaption pour afficher de le titre des images
+      const titleImage = document.createElement("figcaption")
+      titleImage .innerText = article.title
 
-        //Affichage des élements
-        gallery.appendChild(figure)
-        figure.appendChild(imageCollection)
-        figure.appendChild(titleImage)
-    }
+      //Affichage des élements
+      gallery.appendChild(figure)
+      figure.appendChild(imageCollection)
+      figure.appendChild(titleImage)
+
+  }
 }
 
-//Création des boutons filtres
 function BoutonFiltres(){
-    for (let t = 0; t < 4; t++) {
-        const container = document.getElementById('filtres');
-        const button = document.createElement('button');
-        button.className = "bouton"+t;
-        //Liste contenant le texte des boutons
-        const texteBouton =["Tous","Objets","Appartements","Hotel & restaurants"]
-        button.innerHTML = texteBouton[t];
-        container.appendChild(button);
-    }   
+  
+  for (let t = 0; t < 4; t++) {
+    const container = document.getElementById('filtres');
+    const button = document.createElement('button');
+    button.className = "bouton"+t;
+    //Liste contenant le texte des boutons
+    const texteBouton =["Tous","Objets","Appartements","Hotel & restaurants"]
+    button.innerHTML = texteBouton[t];
+    container.appendChild(button);
+  }   
+
+  //Bouton Tous//
+  const boutonTous = document.querySelector(".bouton0");
+  boutonTous.addEventListener("click", function () {
+    const collectionComplete = collection.filter(function (collection) {
+      return collection;
+    });
+    document.querySelector(".gallery").innerHTML = "";
+    genererCollection(collectionComplete);
+  });
+
+  //Bouton Objets//
+  const boutonObjets = document.querySelector(".bouton1");
+  boutonObjets.addEventListener("click", function () {
+    const collectionComplete = collection.filter(function (collection) {
+      return collection.category.name === "Objets";
+    });
+    document.querySelector(".gallery").innerHTML = "";
+    genererCollection(collectionComplete);
+  });
+
+  //Bouton Appartements//
+  const boutonAppartements = document.querySelector(".bouton2");
+  boutonAppartements.addEventListener("click", function () {
+    const collectionComplete = collection.filter(function (collection) {
+      return collection.category.name === "Appartements";
+    });
+    document.querySelector(".gallery").innerHTML = "";
+    genererCollection(collectionComplete);
+  });
+
+  //Bouton Hotel//
+  const boutonHotel = document.querySelector(".bouton3");
+  boutonHotel.addEventListener("click", function () {
+  const collectionComplete = collection.filter(function (collection) {
+    return collection.category.name === "Hotels & restaurants";
+  });
+    document.querySelector(".gallery").innerHTML = "";
+    genererCollection(collectionComplete);
+  });
+
 }
 
 
-////////////////////////////////////////////////////////////////
+//Modale
+function openModal() {
+  if (sessionStorage.getItem("token") !== null) {
+    modal = document.querySelector(".modal");
+    modal.style.display = "flex";
+    document.querySelector("#AjouterPhoto").style.display = "none";
+    document.querySelector("#Gallery").style.display = "flex";
+    ModaleVue1(collection);
+    modalStep = 0;
+    modal.addEventListener("click", closeModal);
+    document.addEventListener("click", BoutonSupp);
+    document.addEventListener("click", ModaleVue2);
+  }
+}
+
+function closeModal(event) {
+  if (
+    event.target === document.querySelector(".modal") ||
+    event.target === document.getElementsByClassName("fa-xmark")[modalStep]
+  ) {
+    document.querySelector(".modal").style.display = "none";
+    document.removeEventListener("click", closeModal);
+    document.removeEventListener("click", BoutonSupp);
+    modalStep = null;
+  }
+}
 
 
-//Fenêtre modale vue 1
-function ModaleVue1(collection){
-    // Titre
-    const fenetre = document.querySelector(".title-modal");
-    const titre = document.createElement("h3");
-    titre.innerText = "Galerie photo";
 
-    //Bouton du bas
-    const divbouton = document.querySelector(".btn-modal");
-    const bouton = document.createElement("button");
-    bouton.className = "classbouton";
-    bouton.innerHTML = "Ajouter une photo";
+//Modale vue1
+function ModaleVue1(collection) {
+  const ContenuModale = document.querySelector(".ContenuModale");
+  ContenuModale.innerHTML = "";
 
-    //Affichage des élements
-    fenetre.appendChild(titre);
-    divbouton.appendChild(bouton);
+  collection.forEach((i) => {
+
+    const figure = document.createElement("figure");
+    figure.className = "figure";
+
+    const imageCollection = document.createElement("img");
+    imageCollection.src = i.imageUrl;
+
+    const corbeille = document.createElement("i");
+    corbeille.id = i.id;
+    corbeille.classList.add("fa-solid", "fa-trash-can");
+
+    ContenuModale.appendChild(figure);
+    figure.append(imageCollection,  corbeille);
+  });
+}
+
+
+function BoutonSupp (event) {
+  event.preventDefault();
+  if (event.target.matches(".fa-trash-can")) {
+    SuppElement(event.target.id);
+  }
+}
+
+//Supprimer un élement de la collection
+function SuppElement(i) {
+
+  let token = sessionStorage.getItem("token");
+  fetch("http://localhost:5678/api/works/" + i, {
     
-    const AccesStepTwo = document.querySelector(".classbouton");
-    AccesStepTwo.addEventListener("click", function () {
-        ModaleVue2()
-    });
+    method: "DELETE",
+    headers: {
+      authorization: `Bearer ${token}`,
+    },
 
-    for (let i = 0; i < collection.length; i++) {
-        const article = collection[i];
-        const fenetre = document.querySelector("#btn-img");
-        const btnimage = document.createElement("figure");
+  }).then((response) => {
 
-        // Création des balises IMG
-        const imageElement = document.createElement("img");
-        imageElement.src = article.imageUrl;
-        
-        // Bouton poubelle
-        const btnpoubelle = document.createElement("button");
-        btnpoubelle.className = "poubelle";
-
-        // Image poubelle bouton
-        const imgpoubelle = document.createElement("img");
-        imgpoubelle.src = "assets/icons/poubelle.png";
-
-        //Affichage des élements
-        fenetre.appendChild(btnimage);
-        btnpoubelle.appendChild(imgpoubelle);
-        btnimage.appendChild(btnpoubelle);
-        btnimage.appendChild(imageElement);
-    }  
+    if (response.ok) {
+      collection = collection.filter((work) => work.id != i);
+      ModaleVue1(collection);
+      genererCollection(collection);
+     
+    } 
+  });
 }
 
-//Fenêtre modale vue 2
-function ModaleVue2(){
-    clear()
-    // Titre
-    const fenetre = document.querySelector(".title-modal");
-    const titre = document.createElement("h3");
-    titre.innerText = "Ajout photo";
 
-    //Bouton du bas
-    const divbouton = document.querySelector(".btn-modal");
-    const bouton = document.createElement("button");
-    bouton.className = "classbouton";
-    bouton.innerHTML = "Valider";
 
-    //Rectangle bleu
-    const formulaire = document.querySelector(".formulaire");
-    const rectangle = document.createElement("div");
+//Modale vue 2
+function ModaleVue2(event){
+  if(event.target === document.querySelector("#BtnAjouterPhoto")){
+    //Chargement image explorateur fichier
+    InputImage = document.querySelector("#photo");
+    InputImage.onchange = picturePreview;
 
-    // Création image dans le rectangle bleu
-    const imgformulaire = document.createElement("img");
-    imgformulaire.src = "assets/icons/imgformulaire.png";
+    //Pour ne pas affiché les 2 modales
+    document.querySelector("#AjouterPhoto").style.display = "flex";
+    document.querySelector("#Gallery").style.display = "none";
+    document.querySelector("#labelPhoto").style.display = "flex";
+    document.querySelector("#picturePreview").style.display = "none";
 
-    // Création bouton 
-    const Ajouterbouton = document.createElement("button");
-    Ajouterbouton.className = "Ajouterbouton";
-    Ajouterbouton.innerHTML = "+ Ajouter une photo";
+    document.removeEventListener("click", BoutonSupp );
+    document.removeEventListener("click", ModaleVue2);
+    document.addEventListener("click", closeModal);
+    document.querySelector(".modalHeader .fa-arrow-left").addEventListener("click", openModal);
+    document.addEventListener("click", BoutonEnvoyer);
 
-    //texte indication
-    const indicationformat= document.createElement("figcaption");
-    indicationformat.innerHTML = "jpg, png : 4mo max";
+    selectionCategorie();
+  }
+}
 
-    //Création formulaire 
-    const contenantinput= document.createElement("form");
-    const txttitre= document.createElement("p");
-    txttitre.innerHTML = "Titre";
+//Affiché l'image choisi
+function picturePreview(){
+  const [file] = InputImage.files;
+  if (file) {
+    document.querySelector("#picturePreviewImg").src = URL.createObjectURL(file);
+    document.querySelector("#picturePreview").style.display = "flex";
+    document.querySelector("#labelPhoto").style.display = "none";
+  }
+}
 
-    //Nommer l'image
-    const inputitre= document.createElement("input");
-    const txtcategorie= document.createElement("p");
-    txtcategorie.innerHTML = "Catégorie";
 
-    //Selection catégorie
-    const inpucategorie= document.createElement("select");
+function RecupererCatégorie() {
+  
+  let listeCategories = new Set();
 
-    //choix
-    const choix1= document.createElement("option");
-    choix1.innerHTML = "Objets";
-    const choix2= document.createElement("option");
-    choix2.innerHTML = "Appartements";
-    const choix3= document.createElement("option");
-    choix3.innerHTML = "Hotel & restaurants";
+  collection.forEach((work) => {
+    listeCategories.add(JSON.stringify(work.category));
+  });
+  const TableauCatégorie = [...listeCategories];
+  categories = TableauCatégorie.map((s) => JSON.parse(s));
+}
+//Choix de la catégorie de l'élements
+function selectionCategorie() {
 
-    //Affichage des élements
-    fenetre.appendChild(titre);
-    formulaire.appendChild(rectangle)
-    rectangle.appendChild(imgformulaire)
-    rectangle.appendChild(Ajouterbouton)
-    rectangle.appendChild(indicationformat)
+  document.querySelector("#selectionCategorie").innerHTML = "";
 
-    //Formulaire
-    formulaire.appendChild(contenantinput)
-    contenantinput.appendChild(txttitre)
-    contenantinput.appendChild(inputitre)
-    contenantinput.appendChild(txtcategorie)
+  option = document.createElement("option");
+  document.querySelector("#selectionCategorie").appendChild(option);
 
-    //input catégorie
-    contenantinput.appendChild(inpucategorie)
-    inpucategorie.appendChild(choix1)
-    inpucategorie.appendChild(choix2)
-    inpucategorie.appendChild(choix3)
+  categories.forEach((categorie) => {
+    option = document.createElement("option");
+    option.value = categorie.name;
+    option.innerText = categorie.name;
+    option.id = categorie.id;
+    document.querySelector("#selectionCategorie").appendChild(option);
+  });
+};
+
+
+//Bouton envoyer nouveau contenu
+function BoutonEnvoyer(event) {
+  if (event.target === document.querySelector("#valider")) {
+    event.preventDefault();
+    EnvoyerElement();
+   }
+}
+
+//Envoyer nouveau contenu
+function EnvoyerElement() {
+
+  let token = sessionStorage.getItem("token");
+  const select = document.getElementById("selectionCategorie");
+  const title = document.getElementById("title").value;
+  const categoryName = select.options[select.selectedIndex].innerText;
+  const categoryId = select.options[select.selectedIndex].id;
+  const image = document.getElementById("photo").files[0];
+  //FormData
+  const formData = new FormData();
+  formData.append("image", image);
+  formData.append("title", title);
+  formData.append("category", categoryId);
+  Envoyer(token, formData, title, categoryName);
+   
+}
+
+
+
+
+
+//Mettre a jour la collection dynamiquement
+function UpdateCollection(data, categoryName) {
+  newWork = {};
+  newWork.title = data.title;
+  newWork.id = data.id;
+  newWork.category = {"id" : data.categoryId, "name" : categoryName};
+  newWork.imageUrl = data.imageUrl;
+  collection.push(newWork);
+}
+
+
+function Envoyer(token, formData,categoryName) {
+  fetch("http://localhost:5678/api/works", {
+    method: "POST",
+    headers: {
+     authorization: `Bearer ${token}`,
+     },
+    body: formData,
     
-    //Bouton validé
-    divbouton.appendChild(bouton);
-}
+   })
+     .then((response) => {
+        return response.json();
+      })
 
-//Supprimer le contenu de la vue 1 pour passer a la vue 2
-function clear(){
-    document.querySelector(".title-modal").innerHTML = "";
-    document.querySelector(".btn-modal").innerHTML = "";
-    document.querySelector("#btn-img").innerHTML = "";
-}
-
-
-////////////////////////////////////////////////////////////////
-
-//Création de la fenêtre modale
-const openModal = function (e){
-    e.preventDefault()
-    modal = document.querySelector(e.target.getAttribute('href'))
-    modal.style.display = null
-    modal.setAttribute('aria-hidden','false')
-    modal.setAttribute('aria-modal','true')
-    modal.addEventListener('click',closeModal)
-    modal.querySelector('.js-modal-close').addEventListener('click', closeModal)
-    modal.querySelector('.js-modal-stop').addEventListener('click', stopPropagation)
-}
-
-const closeModal = function (e){
-    if (modal === null) return
-    e.preventDefault()
-    modal.style.display = "none"
-    modal.setAttribute('aria-hidden','true')
-    modal.setAttribute('aria-modal','false')
-    modal.removeEventListener('click',closeModal)
-    modal.querySelector('.js-modal-close').removeEventListener('click', closeModal)
-    modal.querySelector('.js-modal-stop').removeEventListener('click', stopPropagation)
-    modal = null
-}
-// Pour ne pas fermer la modale en cliquant sur la modale
-const stopPropagation = function(e){
-    e.stopPropagation()
-}
-
-////////////////////////////////////////////////////////////////
-
-
-// Gestion fonction + bouton///
-console.log(window.location.href)
-//Si on est dans la page User.html
-if (window.location.href === "http://127.0.0.1:5501/User.html"){
-
-    genererCollection(collection);
-    BoutonFiltres();
-
-    //Bouton Tous//
-    const boutonTous = document.querySelector(".bouton0");
-    boutonTous.addEventListener("click", function () {
-        const collectionComplete = collection.filter(function (collection) {
-            return collection;
-        });
-        document.querySelector(".gallery").innerHTML = "";
-        genererCollection(collectionComplete);
-        });
-
-    //Bouton Objets//
-    const boutonObjets = document.querySelector(".bouton1");
-    boutonObjets.addEventListener("click", function () {
-        const collectionComplete = collection.filter(function (collection) {
-            return collection.category.name === "Objets";
-        });
-        document.querySelector(".gallery").innerHTML = "";
-        genererCollection(collectionComplete);
-    });
-
-    //Bouton Appartements//
-    const boutonAppartements = document.querySelector(".bouton2");
-    boutonAppartements.addEventListener("click", function () {
-        const collectionComplete = collection.filter(function (collection) {
-            return collection.category.name === "Appartements";
-        });
-        document.querySelector(".gallery").innerHTML = "";
-        genererCollection(collectionComplete);
-    });
-
-    //Bouton Hotel//
-    const boutonHotel = document.querySelector(".bouton3");
-    boutonHotel.addEventListener("click", function () {
-        const collectionComplete = collection.filter(function (collection) {
-            return collection.category.name === "Hotels & restaurants";
-        });
-        document.querySelector(".gallery").innerHTML = "";
-        genererCollection(collectionComplete);
-    });
-
-}
-//Si on est dans la page Admin.html + Modale
-else if(window.location.href === "http://127.0.0.1:5501/Admin.html"){
-
-    genererCollection(collection);
-    ModaleVue1(collection)
-
-    document.querySelectorAll(".js-modal").forEach(a=>{
-        a.addEventListener("click",openModal)
-    })
+     .then ((data) => {
+      UpdateCollection(data, categoryName);
+      genererCollection(collection);
+      document.querySelector(".modal").style.display = "none";
+      document.removeEventListener("click", closeModal);
+      //Renvoie sur la modale 1
+      openModal()
+  
+     })
     
-    // Touche echap pour quitter la modale
-    window.addEventListener('keydown',function(e){
-        if(e.key === "Escape" || e.key === "Esc"){
-            closeModal(e)
-        }
-    })
 }
+

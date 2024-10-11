@@ -9,7 +9,7 @@
 	<link href="https://fonts.googleapis.com/css2?family=Syne:wght@700;800&family=Work+Sans&display=swap" rel="stylesheet">
 	<meta name="description" content="">
 	<link rel="stylesheet" href="./assets/style-login.css">
-	<script type="module" src="/JS/script-connection.js"></script>
+	<script type="module" src="JS/script-connection.js"></script> 
 </head>
 
 <body>
@@ -17,15 +17,15 @@
             <h1>Sophie Bluel <span>Architecte d'intérieur</span></h1>
             <nav>
                 <ul>
-                    <li>projets</li>
+                    <li><a href="index.html">projets</a></li>
                     <li>contact</li>
-                    <li class="log">login</li>
+                    <li><a href="login.html">login</a></li>
                     <li><img src="./assets/icons/instagram.png" alt="Instagram"></li>
                 </ul>
             </nav>
     </header>
 
-    <main class="content">
+    <main class="login">
       
         <form class="formulaire" action="#" method="post">
             <h2>Log In</h2>
@@ -33,12 +33,11 @@
 			<input  type="email" name="email" id="email">
 			<label for="motdepasse">Mot de passe</label>
 			<input  type="password" name="motdepasse" id="motdepasse">
-            <div class="bouton">
-			    <button id="Submit"type="button">Se connecter</button>
+            <div class="boutonSubmit">
+			    <button type="submit" value="Se connecter" id="loginBtn">Se connecter</button>
             </div>
             <a href="#">Mot de passe oublié</a>
     </main>
-
 
     <footer>
         <nav class="nav-footer">
@@ -49,5 +48,5 @@
     </footer>
 
 </body>
-
 </html>
+

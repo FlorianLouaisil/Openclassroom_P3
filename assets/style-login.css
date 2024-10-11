@@ -153,7 +153,7 @@ body{
     border: none;
 }
 
-.bouton{
+.boutonSubmit{
     display: flex;
     justify-content: center;
     margin-top: 7px;
@@ -165,7 +165,8 @@ body{
     text-decoration: none underline;
     color: inherit;
 }
-.content{
+/*  */
+.login{
     display: flex;
 	max-width: 1140px;
     margin: auto;
@@ -191,4 +192,9 @@ footer{
 
 .log{
 	font-weight: bold;
+}
+
+header a{
+	text-decoration: none;
+	color: inherit;
 }
