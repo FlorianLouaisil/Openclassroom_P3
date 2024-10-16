@@ -8,54 +8,54 @@ fetch('http://localhost:5678/api/works')
       RecupererCatégorie();
       document.querySelector(".lien").addEventListener("click", openModal);
       genererCollection(collection);
-     }
+    }
 
-     else{
-       console.log("pas connecté")
-       //Suppression lien vers modale
-       document.getElementById("masquer").style.display = "none"; 
-       genererCollection(collection);
-       BoutonFiltres()
-     }
-})
+    else {
+      console.log("pas connecté")
+      //Suppression lien vers modale
+      document.getElementById("masquer").style.display = "none";
+      genererCollection(collection);
+      BoutonFiltres()
+    }
+  })
 
 
 
-function genererCollection(collection){
+function genererCollection(collection) {
   for (let i = 0; i < collection.length; i++) {
-      const article = collection[i]
-      const gallery = document.querySelector(".gallery")
-      
-      // Création des balises figure
-      const figure = document.createElement("figure")
+    const article = collection[i]
+    const gallery = document.querySelector(".gallery")
 
-      // Création des balises IMG
-      const imageCollection = document.createElement("img");
-      imageCollection.src = article.imageUrl
+    // Création des balises figure
+    const figure = document.createElement("figure")
 
-      // Création des balises figcaption pour afficher de le titre des images
-      const titleImage = document.createElement("figcaption")
-      titleImage .innerText = article.title
+    // Création des balises IMG
+    const imageCollection = document.createElement("img");
+    imageCollection.src = article.imageUrl
 
-      //Affichage des élements
-      gallery.appendChild(figure)
-      figure.appendChild(imageCollection)
-      figure.appendChild(titleImage)
+    // Création des balises figcaption pour afficher de le titre des images
+    const titleImage = document.createElement("figcaption")
+    titleImage.innerText = article.title
+
+    //Affichage des élements
+    gallery.appendChild(figure)
+    figure.appendChild(imageCollection)
+    figure.appendChild(titleImage)
 
   }
 }
 
-function BoutonFiltres(){
-  
+function BoutonFiltres() {
+
   for (let t = 0; t < 4; t++) {
     const container = document.getElementById('filtres');
     const button = document.createElement('button');
-    button.className = "bouton"+t;
+    button.className = "bouton" + t;
     //Liste contenant le texte des boutons
-    const texteBouton =["Tous","Objets","Appartements","Hotel & restaurants"]
+    const texteBouton = ["Tous", "Objets", "Appartements", "Hotel & restaurants"]
     button.innerHTML = texteBouton[t];
     container.appendChild(button);
-  }   
+  }
 
   //Bouton Tous//
   const boutonTous = document.querySelector(".bouton0");
@@ -90,9 +90,9 @@ function BoutonFiltres(){
   //Bouton Hotel//
   const boutonHotel = document.querySelector(".bouton3");
   boutonHotel.addEventListener("click", function () {
-  const collectionComplete = collection.filter(function (collection) {
-    return collection.category.name === "Hotels & restaurants";
-  });
+    const collectionComplete = collection.filter(function (collection) {
+      return collection.category.name === "Hotels & restaurants";
+    });
     document.querySelector(".gallery").innerHTML = "";
     genererCollection(collectionComplete);
   });
@@ -147,12 +147,12 @@ function ModaleVue1(collection) {
     corbeille.classList.add("fa-solid", "fa-trash-can");
 
     ContenuModale.appendChild(figure);
-    figure.append(imageCollection,  corbeille);
+    figure.append(imageCollection, corbeille);
   });
 }
 
 
-function BoutonSupp (event) {
+function BoutonSupp(event) {
   event.preventDefault();
   if (event.target.matches(".fa-trash-can")) {
     SuppElement(event.target.id);
@@ -164,7 +164,7 @@ function SuppElement(i) {
 
   let token = sessionStorage.getItem("token");
   fetch("http://localhost:5678/api/works/" + i, {
-    
+
     method: "DELETE",
     headers: {
       authorization: `Bearer ${token}`,
@@ -176,16 +176,16 @@ function SuppElement(i) {
       collection = collection.filter((work) => work.id != i);
       ModaleVue1(collection);
       genererCollection(collection);
-     
-    } 
+
+    }
   });
 }
 
 
 
 //Modale vue 2
-function ModaleVue2(event){
-  if(event.target === document.querySelector("#BtnAjouterPhoto")){
+function ModaleVue2(event) {
+  if (event.target === document.querySelector("#BtnAjouterPhoto")) {
     //Chargement image explorateur fichier
     InputImage = document.querySelector("#photo");
     InputImage.onchange = picturePreview;
@@ -196,7 +196,7 @@ function ModaleVue2(event){
     document.querySelector("#labelPhoto").style.display = "flex";
     document.querySelector("#picturePreview").style.display = "none";
 
-    document.removeEventListener("click", BoutonSupp );
+    document.removeEventListener("click", BoutonSupp);
     document.removeEventListener("click", ModaleVue2);
     document.addEventListener("click", closeModal);
     document.querySelector(".modalHeader .fa-arrow-left").addEventListener("click", openModal);
@@ -207,7 +207,7 @@ function ModaleVue2(event){
 }
 
 //Affiché l'image choisi
-function picturePreview(){
+function picturePreview() {
   const [file] = InputImage.files;
   if (file) {
     document.querySelector("#picturePreviewImg").src = URL.createObjectURL(file);
@@ -218,7 +218,7 @@ function picturePreview(){
 
 
 function RecupererCatégorie() {
-  
+
   let listeCategories = new Set();
 
   collection.forEach((work) => {
@@ -250,7 +250,7 @@ function BoutonEnvoyer(event) {
   if (event.target === document.querySelector("#valider")) {
     event.preventDefault();
     EnvoyerElement();
-   }
+  }
 }
 
 //Envoyer nouveau contenu
@@ -267,8 +267,8 @@ function EnvoyerElement() {
   formData.append("image", image);
   formData.append("title", title);
   formData.append("category", categoryId);
-  Envoyer(token, formData, title, categoryName);
-   
+  Envoyer(token, formData, categoryName);
+
 }
 
 
@@ -280,34 +280,33 @@ function UpdateCollection(data, categoryName) {
   newWork = {};
   newWork.title = data.title;
   newWork.id = data.id;
-  newWork.category = {"id" : data.categoryId, "name" : categoryName};
+  newWork.category = { "id": data.categoryId, "name": categoryName };
   newWork.imageUrl = data.imageUrl;
   collection.push(newWork);
 }
 
 
-function Envoyer(token, formData,categoryName) {
+function Envoyer(token, formData, categoryName) {
   fetch("http://localhost:5678/api/works", {
     method: "POST",
     headers: {
-     authorization: `Bearer ${token}`,
-     },
+      authorization: `Bearer ${token}`,
+    },
     body: formData,
-    
-   })
-     .then((response) => {
-        return response.json();
-      })
 
-     .then ((data) => {
+  })
+    .then((response) => {
+      return response.json();
+    })
+
+    .then((data) => {
       UpdateCollection(data, categoryName);
       genererCollection(collection);
       document.querySelector(".modal").style.display = "none";
       document.removeEventListener("click", closeModal);
-      //Renvoie sur la modale 1
-      openModal()
-  
-     })
-    
+
+    })
+
 }
+
 
